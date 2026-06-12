@@ -1,3 +1,77 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-paper: #fbfaf7;
+  --color-panel: #f4f1eb;
+  --color-rule: #e6e1d6;
+  --color-ink: #1c1b1a;
+  --color-accent: #15467d;
+  --color-accent-dark: #0f3458;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Footnote return target: briefly glow the reference when jumped to */
+:target {
+  scroll-margin-top: 5rem;
+}
+.fn-item:target {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-radius: 0.25rem;
+}
+
+/* Optical refinements for long-form reading */
+.essay p {
+  text-wrap: pretty;
+}
+.essay {
+  hanging-punctuation: first;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/* ---- Print / PDF ---- */
+@media print {
+  @page {
+    margin: 22mm 20mm;
+  }
+  html {
+    font-size: 11pt;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-reset {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .essay {
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  .avoid-break {
+    break-inside: avoid;
+  }
+  sup a {
+    color: #000 !important;
+  }
+}
