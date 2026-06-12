@@ -431,22 +431,55 @@ export default function Home() {
               </span>
             </div>
 
-            <div className="space-y-2 text-[12.5px] leading-relaxed text-gray-500 max-w-xl">
-              <p className="italic">
-                <span className="font-semibold text-gray-600 not-italic">
-                  Disclosure of interest:
-                </span>{" "}
-                the author is the founder and chief executive officer of Rhofin
-                Inc., a commercial enterprise whose business is the subject of the
-                proposal in Section 7. See the author note.
-                <Fn n={1} />
-              </p>
-              <p className="italic">
-                This paper is for research discussion only and is not an offer to
-                sell securities, an investment recommendation, or legal advice.
+          </header>
+
+          {/* THESIS SUMMARY — claim & test, before the abstract */}
+          <div className="space-y-4 my-10">
+            <div className="avoid-break rounded-lg border border-rule bg-panel/40 p-6">
+              <h2 className="font-sans font-bold uppercase tracking-[0.18em] text-[11px] text-accent mb-2">
+                The Claim
+              </h2>
+              <p className="font-serif text-[17px] leading-[1.6] text-slate-800">
+                Trade finance is constrained not only by risk, but by the fixed
+                cost of verifying small transactions. If AI-assisted verification,
+                enforceable digital trade documents, and logistics telemetry lower
+                that cost without increasing error rates, then shipment-level trade
+                finance becomes a scalable, testable asset-origination channel.
               </p>
             </div>
-          </header>
+            <div className="avoid-break rounded-lg border border-rule bg-panel/40 p-6">
+              <h2 className="font-sans font-bold uppercase tracking-[0.18em] text-[11px] text-accent mb-2">
+                The Test
+              </h2>
+              <p className="font-serif text-[17px] leading-[1.6] text-slate-800">
+                Newly approved SME segments should perform near incumbent
+                trade-finance loss benchmarks if the constraint was unit cost; they
+                should deteriorate sharply if the constraint was adverse selection.
+              </p>
+            </div>
+          </div>
+
+          {/* CONFLICT NOTE — short, with expandable full author note */}
+          <div className="text-[12.5px] leading-relaxed text-gray-500 max-w-xl mb-10">
+            <p className="italic">
+              <span className="font-semibold text-gray-600 not-italic">
+                Conflict of interest:
+              </span>{" "}
+              the author is the founder and chief executive officer of Rhofin Inc.,
+              whose business is the subject of the proposal in Section 7.
+            </p>
+            <details className="group mt-1.5">
+              <summary className="cursor-pointer list-none not-italic font-sans text-[12px] text-accent hover:underline inline-flex items-center gap-1">
+                Read the full author note
+                <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                  ⌄
+                </span>
+              </summary>
+              <p className="italic mt-2 pl-3 border-l-2 border-rule">
+                {renderInline(footnotes[0].text, "authornote")}
+              </p>
+            </details>
+          </div>
 
           {/* ABSTRACT */}
           <section className="avoid-break bg-panel/60 border border-rule rounded-lg p-7 my-10 font-sans">
@@ -1207,15 +1240,7 @@ export default function Home() {
           </section>
 
           {/* FOOTER */}
-          <footer className="mt-16 pt-8 border-t border-rule font-sans text-[12.5px] text-gray-500 space-y-4">
-            <div>
-              <p className="font-semibold text-slate-700 mb-1">Cite as</p>
-              <p className="leading-relaxed">
-                Gugelmann, C. (2026). <em>Liquid Supply Chains: How Falling
-                Underwriting Costs Could Turn World Trade into an Asset Class, and
-                What That Would Mean for Growth.</em> Working Paper.
-              </p>
-            </div>
+          <footer className="mt-16 pt-8 border-t border-rule font-sans text-[12.5px] text-gray-500">
             <p className="text-gray-400">
               © 2026 Christoph Gugelmann. For research discussion only; not an offer
               to sell securities, an investment recommendation, or legal advice.
