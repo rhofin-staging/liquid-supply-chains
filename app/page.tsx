@@ -228,7 +228,7 @@ const SECTIONS = [
 export default function Home() {
   const [activeSection, setActiveSection] = useState("intro");
   const [progress, setProgress] = useState(0);
-  const [navCollapsed, setNavCollapsed] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -431,7 +431,16 @@ export default function Home() {
               </span>
             </div>
 
-            <div className="text-[12.5px] leading-relaxed text-gray-500 max-w-xl">
+            <div className="space-y-2 text-[12.5px] leading-relaxed text-gray-500 max-w-xl">
+              <p className="italic">
+                <span className="font-semibold text-gray-600 not-italic">
+                  Disclosure of interest:
+                </span>{" "}
+                the author is the founder and chief executive officer of Rhofin
+                Inc., a commercial enterprise whose business is the subject of the
+                proposal in Section 7. See the author note.
+                <Fn n={1} />
+              </p>
               <p className="italic">
                 This paper is for research discussion only and is not an offer to
                 sell securities, an investment recommendation, or legal advice.
