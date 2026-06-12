@@ -623,6 +623,20 @@ export default function Home() {
               because the argument of this paper concerns the minimum viable
               ticket size rather than differential rejection rates as such.
             </p>
+
+            <Figure
+              n={1}
+              caption="The trade-finance gap has not shrunk with digitization to date — it remains roughly US$2.5 trillion, about 10 percent of merchandise trade."
+              source={
+                <>
+                  Source: ADB Global Trade Finance Gap Survey 2025 (
+                  <NoteLink n={3}>note 3</NoteLink>, <NoteLink n={4}>4</NoteLink>).
+                </>
+              }
+            >
+              <GapChart />
+            </Figure>
+
             <p>
               What makes the gap remarkable is the risk profile of the asset being
               rationed. The ICC Trade Register, the most comprehensive dataset on
@@ -707,6 +721,19 @@ export default function Home() {
 
           {/* SECTION 3 */}
           <Section id="shifts" num="3" title="What changed: three converging shifts">
+            <Figure
+              n={2}
+              caption="Market participants themselves rank the paper’s mechanism highest — new investors, lower compliance costs, scalable supply-chain finance, digital trade and AI-enabled risk management. Bars show the share of surveyed providers naming each as a measure they would prioritise to narrow the gap."
+              source={
+                <>
+                  Source: ADB Global Trade Finance Gap Survey 2025 (
+                  <NoteLink n={3}>note 3</NoteLink>).
+                </>
+              }
+            >
+              <PrioritiesChart />
+            </Figure>
+
             <SubHead>3.1 Technology: the marginal cost of underwriting falls</SubHead>
             <p>
               The diligence that prices small-ticket finance out of existence
@@ -789,6 +816,19 @@ export default function Home() {
               are in force today; the direction of travel elsewhere is dated and
               legislated rather than speculative.
             </p>
+
+            <Figure
+              n={3}
+              caption="Electronic transferable records are moving from legal theory to enacted law across major trading jurisdictions. Some enactments are influenced by, rather than identical to, the model law."
+              source={
+                <>
+                  Source: UNCITRAL MLETR status, cumulative jurisdictions (
+                  <NoteLink n={14}>note 14</NoteLink>).
+                </>
+              }
+            >
+              <MletrChart />
+            </Figure>
 
             <SubHead>
               3.3 Data: underwriting on observed flows rather than reported
@@ -1155,6 +1195,15 @@ export default function Home() {
               the automation can be read off realized losses and market spreads rather
               than inferred from surveys or task-level benchmarks.
             </p>
+
+            <Figure
+              n={4}
+              caption="The thesis is tested, not proven by history. After verification costs fall, realized losses in newly financeable segments should track the incumbent loss benchmark if the constraint was unit cost, or deteriorate sharply if it was adverse selection — the single measurement that discriminates between the two."
+              source={<>Author’s research design; see Sections 2 and 7.</>}
+            >
+              <FalsificationChart />
+            </Figure>
+
             <p>
               <strong className="font-semibold text-slate-900">
                 The offer to researchers: the design window.
@@ -1240,11 +1289,35 @@ export default function Home() {
           </section>
 
           {/* FOOTER */}
-          <footer className="mt-16 pt-8 border-t border-rule font-sans text-[12.5px] text-gray-500">
-            <p className="text-gray-400">
+          <footer className="mt-16 pt-8 border-t border-rule font-sans text-[12.5px] text-gray-500 flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between">
+            <p className="text-gray-400 max-w-xl">
               © 2026 Christoph Gugelmann. For research discussion only; not an offer
               to sell securities, an investment recommendation, or legal advice.
             </p>
+            <div className="flex items-center gap-4 shrink-0">
+              <a
+                href="https://x.com/ChrGugelmann"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Christoph Gugelmann on X"
+                className="text-gray-400 hover:text-accent transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="currentColor" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/christoph-gugelmann/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Christoph Gugelmann on LinkedIn"
+                className="text-gray-400 hover:text-accent transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="w-[19px] h-[19px]" fill="currentColor" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+              </a>
+            </div>
           </footer>
         </article>
       </main>
@@ -1312,5 +1385,248 @@ function FailureMode({
         {children}
       </p>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Figures (dependency-free inline SVG)                               */
+/* ------------------------------------------------------------------ */
+
+const CHART = {
+  accent: "#15467d",
+  accentSoft: "#9db4cb",
+  rule: "#e6e1d6",
+  ink: "#334155",
+  gray: "#94a3b8",
+};
+
+/* Plain link to a footnote in the references list (no duplicate id). */
+function NoteLink({ n, children }: { n: number; children?: React.ReactNode }) {
+  return (
+    <a
+      href={`#fn-${n}`}
+      className="text-accent/70 hover:text-accent underline underline-offset-2 decoration-accent/30"
+    >
+      {children ?? `note ${n}`}
+    </a>
+  );
+}
+
+function Figure({
+  n,
+  children,
+  caption,
+  source,
+}: {
+  n: number;
+  children: React.ReactNode;
+  caption: React.ReactNode;
+  source?: React.ReactNode;
+}) {
+  return (
+    <figure className="avoid-break my-10 not-prose">
+      <div className="rounded-lg border border-rule bg-white/50 px-4 pt-5 pb-3 md:px-6">
+        {children}
+      </div>
+      <figcaption className="mt-3 text-[12.5px] leading-relaxed text-gray-500 font-sans">
+        <span className="font-semibold text-slate-700">Figure {n}.</span>{" "}
+        {caption}
+        {source ? <span className="text-gray-400"> {source}</span> : null}
+      </figcaption>
+    </figure>
+  );
+}
+
+/* Figure 1 — the persistent gap */
+function GapChart() {
+  const data = [
+    { year: "2015", v: 1.5, label: "$1.5T", soft: true },
+    { year: "2023", v: 2.5, label: "$2.5T", soft: false },
+    { year: "2025", v: 2.5, label: "$2.5T", soft: false },
+  ];
+  const W = 460,
+    H = 248,
+    top = 30,
+    base = 200,
+    max = 3,
+    bw = 72;
+  const slot = (W - 80) / 3;
+  const y = (v: number) => base - (v / max) * (base - top);
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full h-auto font-sans"
+      role="img"
+      aria-label="Global trade-finance gap: about 1.5 trillion dollars in 2015, rising to 2.5 trillion in 2023 and unchanged in the 2025 survey."
+    >
+      <line x1="40" y1={base} x2={W - 28} y2={base} stroke={CHART.rule} strokeWidth="1" />
+      {data.map((d, i) => {
+        const cx = 40 + slot * (i + 0.5);
+        const yy = y(d.v);
+        return (
+          <g key={d.year}>
+            <rect
+              x={cx - bw / 2}
+              y={yy}
+              width={bw}
+              height={base - yy}
+              rx="2"
+              fill={d.soft ? CHART.accentSoft : CHART.accent}
+            />
+            <text x={cx} y={yy - 9} textAnchor="middle" fontSize="15" fontWeight="700" fill={CHART.ink}>
+              {d.label}
+            </text>
+            <text x={cx} y={base + 20} textAnchor="middle" fontSize="12" fill={CHART.gray}>
+              {d.year}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/* Figure 2 — industry priorities for closing the gap */
+function PrioritiesChart() {
+  const rows = [
+    { label: "Attract nonbank investors", v: 89 },
+    { label: "Reduce compliance costs", v: 87 },
+    { label: "Scale supply-chain finance", v: 86 },
+    { label: "Digitalize global trade", v: 83 },
+    { label: "Leverage AI for risk & efficiency", v: 78 },
+  ];
+  const W = 460,
+    rowH = 34,
+    top = 12,
+    gutter = 220,
+    x0 = 228;
+  const barMax = W - x0 - 34;
+  const H = top + rows.length * rowH + 4;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full h-auto font-sans"
+      role="img"
+      aria-label="ADB 2025 survey: measures respondents would prioritise to reduce the trade-finance gap, by share of respondents."
+    >
+      {rows.map((r, i) => {
+        const cy = top + i * rowH + rowH / 2;
+        const w = (r.v / 100) * barMax;
+        return (
+          <g key={r.label}>
+            <text x={gutter} y={cy} dominantBaseline="middle" textAnchor="end" fontSize="11.5" fill={CHART.ink}>
+              {r.label}
+            </text>
+            <rect x={x0} y={cy - 9} width={w} height={18} rx="2" fill={CHART.accent} fillOpacity={i === 0 ? 1 : 0.82} />
+            <text x={x0 + w + 6} y={cy} dominantBaseline="middle" fontSize="12" fontWeight="700" fill={CHART.ink}>
+              {r.v}%
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/* Figure 3 — cumulative MLETR legal adoption */
+function MletrChart() {
+  const pts = [
+    { yr: 2018, v: 1 },
+    { yr: 2021, v: 6 },
+    { yr: 2022, v: 7 },
+    { yr: 2023, v: 8 },
+    { yr: 2024, v: 10 },
+    { yr: 2025, v: 13 },
+  ];
+  const W = 460,
+    H = 248,
+    left = 46,
+    right = W - 24,
+    top = 30,
+    base = 200,
+    maxV = 14;
+  const x = (yr: number) => left + ((yr - 2018) / (2025 - 2018)) * (right - left);
+  const y = (v: number) => base - (v / maxV) * (base - top);
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(p.yr).toFixed(1)} ${y(p.v).toFixed(1)}`).join(" ");
+  const area = `${line} L ${x(2025).toFixed(1)} ${base} L ${x(2018).toFixed(1)} ${base} Z`;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full h-auto font-sans"
+      role="img"
+      aria-label="Cumulative jurisdictions adopting MLETR-based electronic trade-document law, rising from 1 in 2018 to 13 in 2025."
+    >
+      <line x1={left} y1={base} x2={right} y2={base} stroke={CHART.rule} strokeWidth="1" />
+      <path d={area} fill={CHART.accent} fillOpacity="0.08" />
+      <path d={line} fill="none" stroke={CHART.accent} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+      {pts.map((p) => (
+        <circle key={p.yr} cx={x(p.yr)} cy={y(p.v)} r="3.2" fill={CHART.accent} />
+      ))}
+      <text x={x(2018)} y={y(1) - 11} textAnchor="start" fontSize="12" fontWeight="700" fill={CHART.ink}>
+        1
+      </text>
+      <text x={x(2025)} y={y(13) - 11} textAnchor="end" fontSize="13" fontWeight="700" fill={CHART.accent}>
+        13 jurisdictions
+      </text>
+      {[2018, 2021, 2023, 2025].map((yr) => (
+        <text key={yr} x={x(yr)} y={base + 20} textAnchor="middle" fontSize="11" fill={CHART.gray}>
+          {yr}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
+/* Figure 4 — the falsification test (schematic, not data) */
+function FalsificationChart() {
+  const W = 460,
+    H = 264,
+    left = 56,
+    right = W - 22,
+    top = 34,
+    base = 212,
+    bench = 178;
+  const unitCost = `M ${left} ${bench + 3} C ${left + 130} ${bench - 3}, ${right - 150} ${bench + 2}, ${right} ${bench - 5}`;
+  const adverse = `M ${left} ${bench + 3} C ${left + 130} ${bench - 12}, ${right - 130} ${top + 64}, ${right} ${top + 10}`;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full h-auto font-sans"
+      role="img"
+      aria-label="Schematic falsification test: under the unit-cost hypothesis newly approved segments track the incumbent loss benchmark; under adverse selection their losses rise sharply. Expected patterns, not observed data."
+    >
+      {/* axes */}
+      <line x1={left} y1={top - 8} x2={left} y2={base} stroke={CHART.rule} strokeWidth="1" />
+      <line x1={left} y1={base} x2={right} y2={base} stroke={CHART.rule} strokeWidth="1" />
+      {/* benchmark */}
+      <line x1={left} y1={bench} x2={right} y2={bench} stroke={CHART.gray} strokeWidth="1" strokeDasharray="2 3" />
+      <text x={right} y={bench - 6} textAnchor="end" fontSize="10.5" fill={CHART.gray}>
+        Incumbent book benchmark (ICC Trade Register)
+      </text>
+      {/* adverse selection */}
+      <path d={adverse} fill="none" stroke={CHART.ink} strokeWidth="2" strokeDasharray="5 4" />
+      <text x={right - 2} y={top + 8} textAnchor="end" fontSize="11" fontWeight="700" fill={CHART.ink}>
+        Adverse selection
+      </text>
+      {/* unit cost */}
+      <path d={unitCost} fill="none" stroke={CHART.accent} strokeWidth="2.5" strokeDasharray="5 4" />
+      <text x={right - 2} y={bench + 20} textAnchor="end" fontSize="11" fontWeight="700" fill={CHART.accent}>
+        Unit cost
+      </text>
+      {/* origin marker */}
+      <circle cx={left} cy={bench + 3} r="3" fill={CHART.gray} />
+      {/* "not data" badge */}
+      <rect x={left} y={top - 16} width="214" height="17" rx="8.5" fill={CHART.accent} fillOpacity="0.08" />
+      <text x={left + 10} y={top - 4} fontSize="10.5" fontWeight="600" fill={CHART.accent}>
+        Expected patterns — not observed data
+      </text>
+      {/* axis labels */}
+      <text x={left} y={base + 20} fontSize="10.5" fill={CHART.gray}>
+        Seasoning of newly approved cohorts →
+      </text>
+      <text x={left - 6} y={top - 16} textAnchor="end" fontSize="10.5" fill={CHART.gray}>
+        Loss
+      </text>
+    </svg>
   );
 }
