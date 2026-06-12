@@ -21,7 +21,7 @@ const newsreader = Newsreader({
 
 const title = "Liquid Supply Chains";
 const description =
-  "How falling underwriting costs could turn world trade into an asset class, and what that would mean for growth. A working paper by Christoph Gugelmann (Rhofin Inc.).";
+  "How falling underwriting costs could turn world trade into an asset class, and what that would mean for growth. A working paper by Christoph Gugelmann.";
 
 export const metadata: Metadata = {
   title: {

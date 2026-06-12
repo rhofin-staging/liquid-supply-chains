@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 const footnotes: { n: number; text: string }[] = [
   {
     n: 1,
-    text: `Christoph Gugelmann is the founder and chief executive officer of Rhofin Inc., a commercial enterprise developing AI-enabled trade-finance origination infrastructure. The author accordingly has a direct commercial and financial interest in the mechanisms this paper describes and in the conclusions it advances, and the paper should be read in light of that interest; the analysis and any errors are the author's own. Section 7 contains a standing invitation to externally funded research partnerships to design and conduct the evaluation of the paper's claims from the first transaction of a new origination channel, on terms guaranteeing full independence of analysis and publication. Correspondence: <research@rhofin.com>.`,
+    text: `Christoph Gugelmann is the founder and chief executive officer of Rhofin Inc., a commercial enterprise developing AI-enabled trade-finance origination infrastructure. The author accordingly has a direct commercial and financial interest in the mechanisms this paper describes and in the conclusions it advances, and the paper should be read in light of that interest; the analysis and any errors are the author's own. Section 7 contains a standing invitation to externally funded research partnerships to design and conduct the evaluation of the paper's claims from the first transaction of a new origination channel, on terms guaranteeing full independence of analysis and publication. Correspondence: research@rhofin.com.`,
   },
   {
     n: 2,
@@ -161,36 +161,24 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   let counter = 0;
 
   const pushText = (str: string) => {
-    const linkRe = /(<?[\w.+-]+@[\w-]+\.[\w.-]+>?|https?:\/\/[^\s)]+)/g;
+    // Link bare URLs only; emails are left as plain text (no mailto links).
+    const linkRe = /https?:\/\/[^\s)]+/g;
     let last = 0;
     let m: RegExpExecArray | null;
     while ((m = linkRe.exec(str))) {
       if (m.index > last) nodes.push(str.slice(last, m.index));
       const raw = m[0];
-      if (raw.includes("@")) {
-        const email = raw.replace(/[<>]/g, "");
-        nodes.push(
-          <a
-            key={`${keyPrefix}-k${counter++}`}
-            href={`mailto:${email}`}
-            className="text-accent hover:text-accent-dark underline underline-offset-2 decoration-accent/30"
-          >
-            {email}
-          </a>,
-        );
-      } else {
-        nodes.push(
-          <a
-            key={`${keyPrefix}-k${counter++}`}
-            href={raw}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent hover:text-accent-dark underline underline-offset-2 decoration-accent/30"
-          >
-            {raw}
-          </a>,
-        );
-      }
+      nodes.push(
+        <a
+          key={`${keyPrefix}-k${counter++}`}
+          href={raw}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:text-accent-dark underline underline-offset-2 decoration-accent/30"
+        >
+          {raw}
+        </a>,
+      );
       last = linkRe.lastIndex;
     }
     if (last < str.length) nodes.push(str.slice(last));
@@ -240,6 +228,7 @@ const SECTIONS = [
 export default function Home() {
   const [activeSection, setActiveSection] = useState("intro");
   const [progress, setProgress] = useState(0);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -321,13 +310,38 @@ export default function Home() {
         </details>
       </div>
 
+      {/* Collapsed-nav reopen button (desktop) */}
+      {navCollapsed && (
+        <button
+          onClick={() => setNavCollapsed(false)}
+          aria-label="Show contents"
+          className="hidden md:flex fixed top-4 left-4 z-40 items-center justify-center w-10 h-10 rounded-md bg-panel border border-rule text-slate-600 hover:text-accent hover:border-accent/40 shadow-sm transition-colors no-print"
+        >
+          <span className="text-lg leading-none">☰</span>
+        </button>
+      )}
+
       {/* FIXED SIDEBAR (desktop) */}
-      <aside className="hidden md:flex w-80 bg-panel p-9 fixed h-screen border-r border-rule flex-col justify-between font-sans selection:bg-slate-200 no-print">
+      <aside
+        className={`hidden ${
+          navCollapsed ? "md:hidden" : "md:flex"
+        } w-80 bg-panel p-9 fixed h-screen border-r border-rule flex-col justify-between font-sans selection:bg-slate-200 no-print`}
+      >
         <div>
           <div className="mb-10">
-            <span className="text-[10px] tracking-[0.22em] uppercase font-bold text-gray-500 block mb-2">
-              Working Paper
-            </span>
+            <div className="flex items-start justify-between mb-2">
+              <span className="text-[10px] tracking-[0.22em] uppercase font-bold text-gray-500 block">
+                Working Paper
+              </span>
+              <button
+                onClick={() => setNavCollapsed(true)}
+                aria-label="Collapse contents"
+                className="text-gray-400 hover:text-accent transition-colors -mt-1 -mr-1 p-1 leading-none"
+                title="Collapse"
+              >
+                «
+              </button>
+            </div>
             <a
               href="#top"
               className="text-xl font-bold tracking-tight text-slate-900 leading-tight block hover:text-accent transition-colors"
@@ -337,7 +351,7 @@ export default function Home() {
             <p className="text-xs text-gray-500 mt-2 font-medium leading-relaxed">
               Christoph Gugelmann
               <br />
-              Rhofin Inc. · June 2026
+              June 2026
             </p>
           </div>
 
@@ -368,7 +382,7 @@ export default function Home() {
           </nav>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-rule space-y-2.5">
+        <div className="mt-8 pt-6 border-t border-rule">
           <a
             href={PDF_URL}
             target="_blank"
@@ -377,17 +391,15 @@ export default function Home() {
           >
             Download PDF
           </a>
-          <a
-            href="#conclusion"
-            className="block text-center w-full bg-accent text-white py-2.5 px-4 rounded font-semibold text-[11px] tracking-wider uppercase hover:bg-accent-dark transition-colors"
-          >
-            Research Partnership
-          </a>
         </div>
       </aside>
 
       {/* ESSAY READING COLUMN */}
-      <main className="flex-1 px-6 py-12 md:py-24 md:px-16 md:ml-80 flex justify-center selection:bg-accent/10 print-reset">
+      <main
+        className={`flex-1 px-6 py-12 md:py-24 md:px-16 ${
+          navCollapsed ? "md:ml-0" : "md:ml-80"
+        } flex justify-center selection:bg-accent/10 print-reset transition-[margin] duration-300 ease-out`}
+      >
         <article
           id="top"
           className="essay max-w-[680px] w-full font-serif text-[18px] md:text-[19.5px] leading-[1.7] text-[#242321]"
@@ -414,40 +426,12 @@ export default function Home() {
                 <Fn n={1} />
               </span>
               <span className="text-gray-400 hidden md:inline">·</span>
-              <span>Rhofin Inc.</span>
-              <span className="text-gray-400 hidden md:inline">·</span>
               <span>
                 <span className="text-gray-400">This version</span> 11 June 2026
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-3 mb-8 no-print">
-              <a
-                href={PDF_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-slate-900 text-white text-[13px] font-medium py-2.5 px-5 rounded-full hover:bg-slate-800 transition-colors"
-              >
-                ↓ Download PDF
-              </a>
-              <a
-                href="mailto:research@rhofin.com?subject=Liquid Supply Chains Research Partnership"
-                className="inline-flex items-center gap-2 border border-slate-300 text-slate-700 text-[13px] font-medium py-2.5 px-5 rounded-full hover:bg-white transition-colors"
-              >
-                Contact the author
-              </a>
-            </div>
-
-            <div className="space-y-2 text-[12.5px] leading-relaxed text-gray-500 max-w-xl">
-              <p className="border-l-2 border-amber-300/70 pl-3 italic">
-                <span className="font-semibold text-gray-600 not-italic">
-                  Disclosure of interest:
-                </span>{" "}
-                the author is the founder and chief executive officer of Rhofin
-                Inc., a commercial enterprise whose business is the subject of
-                the proposal in Section 7. See the author note.
-                <Fn n={1} />
-              </p>
+            <div className="text-[12.5px] leading-relaxed text-gray-500 max-w-xl">
               <p className="italic">
                 This paper is for research discussion only and is not an offer to
                 sell securities, an investment recommendation, or legal advice.
@@ -1034,11 +1018,11 @@ export default function Home() {
             </FailureMode>
 
             {/* Greensill — the cautionary case */}
-            <div className="avoid-break border-l-2 border-rose-300 bg-rose-50/40 rounded-r-lg p-6 my-8 font-sans">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-rose-800 mb-3">
+            <div className="avoid-break border-l-2 border-slate-300 bg-panel/50 rounded-r-lg p-6 my-8 font-sans">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-600 mb-3">
                 The cautionary case is recent: Greensill
               </h3>
-              <p className="font-serif text-[17px] leading-[1.6] text-[#3a2326] mb-4">
+              <p className="font-serif text-[17px] leading-[1.6] text-slate-700 mb-4">
                 Supply-chain finance has already produced its own distribution failure,
                 and any paper proposing to send trade assets to capital markets must
                 confront it. Greensill Capital, which collapsed in March 2021, financed
@@ -1051,7 +1035,7 @@ export default function Home() {
                 fatal.
                 <Fn n={35} />
               </p>
-              <p className="font-serif text-[17px] leading-[1.6] text-[#3a2326]">
+              <p className="font-serif text-[17px] leading-[1.6] text-slate-700">
                 Greensill is sometimes read as an indictment of supply-chain finance as
                 an asset class. We read it as this paper&rsquo;s mechanism stated in the
                 negative: claims that cannot be independently verified at the level of
@@ -1178,25 +1162,6 @@ export default function Home() {
               Researchers and research funders interested in the design window while it
               remains open are invited to make contact.
             </p>
-
-            {/* CTA */}
-            <div className="avoid-break bg-accent text-white rounded-2xl p-8 my-10 font-sans no-print">
-              <h3 className="text-xl font-bold tracking-tight mb-3">
-                The design window is open
-              </h3>
-              <p className="text-white/85 text-[15px] leading-relaxed mb-6 max-w-lg">
-                We seek a small number of structured research partnerships to design the
-                evaluation of a new origination channel before its first transaction,
-                with priority for proposals arriving with independent third-party
-                funding. Analysis and publication independence guaranteed.
-              </p>
-              <a
-                href="mailto:research@rhofin.com?subject=Liquid Supply Chains Research Partnership"
-                className="inline-flex items-center gap-2 bg-white text-accent font-semibold text-sm py-3 px-6 rounded-full hover:bg-slate-100 transition-colors"
-              >
-                research@rhofin.com →
-              </a>
-            </div>
           </Section>
 
           {/* REFERENCES & NOTES */}
@@ -1239,13 +1204,12 @@ export default function Home() {
               <p className="leading-relaxed">
                 Gugelmann, C. (2026). <em>Liquid Supply Chains: How Falling
                 Underwriting Costs Could Turn World Trade into an Asset Class, and
-                What That Would Mean for Growth.</em> Working Paper, Rhofin Inc.
+                What That Would Mean for Growth.</em> Working Paper.
               </p>
             </div>
             <p className="text-gray-400">
-              © 2026 Christoph Gugelmann · Rhofin Inc. For research discussion only;
-              not an offer to sell securities, an investment recommendation, or legal
-              advice.
+              © 2026 Christoph Gugelmann. For research discussion only; not an offer
+              to sell securities, an investment recommendation, or legal advice.
             </p>
           </footer>
         </article>
